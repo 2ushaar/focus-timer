@@ -1,0 +1,309 @@
+:root {
+  font-family: 'Roboto Flex', sans-serif;
+  user-select: none;
+  cursor: default;
+}
+
+/* Hide scrollbar */
+::-webkit-scrollbar { width: 0px; background: transparent; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: transparent;
+  overflow: hidden;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 5px;
+}
+
+/* --- TIMER --- */
+.container {
+  width: 240px;
+  height: 240px;
+  background: rgba(30, 27, 38, 0.95);
+  border-radius: 40px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  cursor: move;
+  z-index: 10;
+  flex-shrink: 0;
+}
+.progress-ring { transform: rotate(-90deg); position: absolute; pointer-events: none; }
+.progress-ring__circle { transition: stroke-dashoffset 0.3s; stroke-linecap: round; }
+.content { text-align: center; color: white; pointer-events: none; }
+h1 { margin: 0; font-size: 3.5rem; font-weight: 300; }
+p { margin: 5px 0 0 0; opacity: 0.7; font-size: 0.9rem; }
+
+/* --- NEW: INTERACTIVE FLOW CONNECTOR --- */
+.connector-container { 
+    margin-top: -5px; 
+    margin-bottom: -5px;
+    z-index: 5; 
+    flex-shrink: 0;
+}
+
+.flow-line {
+  stroke-dasharray: 20;
+  animation: flowStream 1s linear infinite;
+}
+
+.arrow-head {
+  animation: arrowPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes flowStream {
+  to { stroke-dashoffset: -40; }
+}
+
+@keyframes arrowPulse {
+  from { fill-opacity: 0.6; transform: translateY(0px); }
+  to { fill-opacity: 1; transform: translateY(3px); }
+}
+
+/* --- PRIORITY STAGE (The Highligted Box) --- */
+#priority-stage {
+  width: 240px;
+  min-height: 60px;
+  margin-bottom: 15px;
+  z-index: 6;
+  perspective: 1000px; /* For 3D flip effect */
+}
+
+/* The card inside the stage */
+.priority-card {
+  background: rgba(45, 40, 60, 0.95);
+  border: 2px solid #d0bcff; /* Highlighted Border */
+  border-radius: 16px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 0 20px rgba(208, 188, 255, 0.2); /* Outer Glow */
+  animation: floatEntry 0.4s ease-out;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.priority-card:active { transform: scale(0.98); }
+
+.placeholder-text {
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  width: 100%;
+  font-style: italic;
+  padding: 15px;
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 16px;
+}
+
+/* Priority Pulse Animation (15 min reminder) */
+.pulse-glow {
+  animation: urgentPulse 2s infinite;
+}
+@keyframes urgentPulse {
+  0% { box-shadow: 0 0 0 0 rgba(208, 188, 255, 0.4); border-color: #d0bcff; }
+  50% { box-shadow: 0 0 25px 5px rgba(208, 188, 255, 0.1); border-color: white; }
+  100% { box-shadow: 0 0 0 0 rgba(208, 188, 255, 0); border-color: #d0bcff; }
+}
+
+/* --- INPUT FIELD (Subtle) --- */
+.input-container {
+  width: 240px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+#new-task-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 5px;
+  color: rgba(255,255,255,0.6);
+  font-family: 'Roboto Flex', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  text-align: center;
+  transition: 0.3s;
+}
+#new-task-input:focus { border-color: #d0bcff; color: white; }
+#new-task-input::placeholder { color: rgba(255,255,255,0.2); }
+
+/* --- SECONDARY LIST --- */
+.task-container {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  height: 220px; 
+  overflow-y: auto;
+  gap: 8px;
+  padding-bottom: 20px;
+}
+
+.secondary-card {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 10px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.9rem;
+}
+.secondary-card:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* TICKS */
+.circle-tick {
+  width: 20px; height: 20px; min-width: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: transparent;
+  transition: 0.2s;
+}
+.circle-tick.checked { background-color: #d0bcff; border-color: #d0bcff; color: #1e1b26; }
+.priority-card .circle-tick { border-width: 2px; width: 24px; height: 24px; } /* Bigger tick for priority */
+
+/* DONE STATE */
+.secondary-card.done { opacity: 0.4; text-decoration: line-through; }
+.secondary-card.done .circle-tick { background: rgba(255,255,255,0.2); border-color: transparent; }
+
+/* Entry Animation */
+@keyframes floatEntry {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 1. ENHANCED ENERGY FLOW --- */
+.connector-container svg {
+    filter: drop-shadow(0 0 5px rgba(208, 188, 255, 0.4));
+    transition: transform 0.3s ease, filter 0.3s;
+}
+
+/* Interaction: Hovering the arrow speeds it up and glows brighter */
+.connector-container:hover svg {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px #d0bcff);
+}
+
+.connector-container:hover .flow-line {
+    animation-duration: 0.3s; /* Super fast flow on hover */
+}
+
+/* --- 2. SATISFYING CHECKBOX POP --- */
+/* The Ripple Effect Animation */
+@keyframes rippleBurst {
+    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { box-shadow: 0 0 0 15px rgba(76, 175, 80, 0); transform: scale(1); }
+}
+
+/* Class applied via JS when clicked */
+.pop-animation {
+    animation: rippleBurst 0.4s ease-out;
+    background-color: #4caf50 !important; /* Green flash */
+    border-color: #4caf50 !important;
+}
+
+/* --- 3. TASK EXIT ANIMATION --- */
+.task-card-exit {
+    transform: translateX(20px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* --- THE SYNAPTIC TETHER --- */
+.focus-stream {
+    position: relative;
+    width: 60px;
+    height: 50px; /* Space between timer and task */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -5px;
+    margin-bottom: -5px;
+    z-index: 5;
+    cursor: pointer; /* Interactive */
+    flex-shrink: 0;
+}
+
+/* The vertical beam */
+.stream-line {
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+        rgba(208, 188, 255, 0), 
+        rgba(208, 188, 255, 0.5), 
+        rgba(208, 188, 255, 0)
+    );
+    box-shadow: 0 0 10px rgba(208, 188, 255, 0.2);
+    transition: all 0.4s ease;
+}
+
+/* The glowing orb in the center */
+.stream-node {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #d0bcff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #d0bcff, 0 0 20px rgba(208, 188, 255, 0.5);
+    animation: energyFloat 3s ease-in-out infinite;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+}
+
+/* --- ANIMATIONS --- */
+
+/* The Orb floating up and down gently */
+@keyframes energyFloat {
+    0%, 100% { transform: translateY(-10px) scale(1); opacity: 0.8; }
+    50% { transform: translateY(10px) scale(0.9); opacity: 0.5; }
+}
+
+/* A burst effect for when you click/interact */
+@keyframes pulseBurst {
+    0% { box-shadow: 0 0 0 0 rgba(208, 188, 255, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(208, 188, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(208, 188, 255, 0); }
+}
+
+/* --- INTERACTIONS --- */
+
+/* Hovering: The line becomes solid and bright (Focusing) */
+.focus-stream:hover .stream-line {
+    width: 4px;
+    background: linear-gradient(to bottom, 
+        rgba(208, 188, 255, 0), 
+        #d0bcff, 
+        rgba(208, 188, 255, 0)
+    );
+    box-shadow: 0 0 15px #d0bcff;
+}
+
+/* Hovering: The orb stabilizes in the center and grows */
+.focus-stream:hover .stream-node {
+    animation-play-state: paused; /* Stop floating */
+    transform: translateY(0) scale(1.5); /* Center and grow */
+    background: #fff;
+    box-shadow: 0 0 20px #d0bcff, 0 0 40px #d0bcff;
+}
+
+/* Clicking (Added via JS class): Energy Surge */
+.stream-surge .stream-node {
+    animation: pulseBurst 0.6s ease-out;
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Focus</title>
+  </head>
+  <body>
+    <div class="app-wrapper">
+      
+      <!-- 1. TIMER -->
+      <div class="container" data-tauri-drag-region>
+        <svg class="progress-ring" width="220" height="220">
+          <circle class="progress-ring__circle--track" stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="transparent" r="100" cx="110" cy="110"/>
+          <circle class="progress-ring__circle" stroke="#d0bcff" stroke-width="12" fill="transparent" r="100" cx="110" cy="110"/>
+        </svg>
+        <div class="content">
+          <h1 id="timer">00:00</h1>
+          <p id="status">Ready</p>
+        </div>
+      </div>
+
+    
+      <div class="focus-stream">
+        <!-- The glowing line -->
+        <div class="stream-line"></div>
+        <!-- The interactive energy node in the middle -->
+        <div class="stream-node"></div>
+      </div>
+
+      <!-- 3. PRIORITY STAGE (The Glow Box) -->
+      <div id="priority-stage">
+        <!-- JS will inject the top task here -->
+        <div class="placeholder-text">No active tasks</div>
+      </div>
+
+      <!-- 4. INPUT AREA (Moved Below Priority) -->
+      <div class="input-container">
+        <input type="text" id="new-task-input" placeholder="+ Add a new task..." autocomplete="off">
+      </div>
+
+      <!-- 5. SECONDARY TASK LIST -->
+      <div class="task-container">
+        <div id="secondary-task-list">
+            <!-- Remaining tasks go here -->
+        </div>
+      </div>
+
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
